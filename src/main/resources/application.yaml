@@ -9,3 +9,6 @@ amqp:
   host: localhost
   username: guest
   password: guest
+  queue: myqueue
+  # DO NOT SET THIS 'true' IN PRODUCTION!
+  trustAllCerts: true

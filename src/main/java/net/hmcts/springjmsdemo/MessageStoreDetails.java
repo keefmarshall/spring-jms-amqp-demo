@@ -17,6 +17,9 @@ public class MessageStoreDetails {
     @Value("${amqp.password}")
     private String password;
 
+    @Value("${amqp.trustAllCerts}")
+    private boolean trustAllCerts;
+
     public String getUsername() {
         return username;
     }
@@ -26,7 +29,11 @@ public class MessageStoreDetails {
     }
 
     public String getUrlString() throws UnsupportedEncodingException {
-        return String.format("amqp://%1s?amqp.idleTimeout=3600000", host);
-//        return String.format("amqps://%1s?amqp.idleTimeout=3600000", host);
+//        return String.format("amqp://%1s?amqp.idleTimeout=3600000", host);
+        return String.format("amqps://%1s?amqp.idleTimeout=3600000", host);
+    }
+
+    public boolean isTrustAllCerts() {
+        return this.trustAllCerts;
     }
 }
