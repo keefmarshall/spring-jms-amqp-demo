@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: spring-jms-demo
+
+amqp:
+  host: localhost
+  username: guest
+  password: guest
