@@ -1,5 +1,6 @@
-package net.hmcts.springjmsdemo;
+package net.hmcts.springjmsdemo.topic;
 
+import net.hmcts.springjmsdemo.queue.QueuePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +11,15 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.jms.Session;
 
-
+/**
+ * Essentially identical to the QueuePublisher
+ */
 @Service
-public class QueuePublisher {
-
+public class TopicPublisher {
     private final Logger logger = LoggerFactory.getLogger(QueuePublisher.class);
 
-    @Value("${amqp.queue}")
-    private String queueName;
+    @Value("${amqp.topic}")
+    private String destination;
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -28,7 +30,8 @@ public class QueuePublisher {
     }
 
     public void sendPing() {
-        logger.info("Sending ping");
-        jmsTemplate.send(queueName, (Session session) -> session.createTextMessage("ping"));
+        logger.info("Sending pong to topic");
+        jmsTemplate.send(destination, (Session session) -> session.createTextMessage("pong"));
     }
+
 }

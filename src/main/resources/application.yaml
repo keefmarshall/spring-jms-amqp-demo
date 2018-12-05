@@ -9,6 +9,10 @@ amqp:
   host: localhost
   username: guest
   password: guest
+  # Simple queue
   queue: myqueue
+  # Topic and subscription:
+  topic: test.topic
+  subscription: test.queue
   # DO NOT SET THIS 'true' IN PRODUCTION!
   trustAllCerts: true

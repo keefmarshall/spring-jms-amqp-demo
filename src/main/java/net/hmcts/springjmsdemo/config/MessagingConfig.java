@@ -1,4 +1,4 @@
-package net.hmcts.springjmsdemo;
+package net.hmcts.springjmsdemo.config;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +26,13 @@ public class MessagingConfig {
     @Value("${spring.application.name}")
     private String clientId;
 
+    /**
+     * DO NOT USE THIS IN PRODUCTION! ONLY FOR TESTING!
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws KeyManagementException
+     * @deprecated
+     */
     @Bean
     @Deprecated
     public SSLContext jmsSslContext() throws NoSuchAlgorithmException, KeyManagementException {
@@ -77,10 +84,30 @@ public class MessagingConfig {
         return returnValue;
     }
 
+    /**
+     * Simple factory, used for queues - see below for example for topics
+     * @param connectionFactory
+     * @return
+     */
     @Bean
     public JmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
         DefaultJmsListenerContainerFactory returnValue = new DefaultJmsListenerContainerFactory();
         returnValue.setConnectionFactory(connectionFactory);
+        return returnValue;
+    }
+
+    /**
+     * Specific config required for topics in Azure Service Bus -
+     * need setSubscriptionDurable(true) -
+     * see: http://ramblingstechnical.blogspot.com/p/using-azure-service-bus-with-spring-jms.html
+     * @param connectionFactory
+     * @return
+     */
+    @Bean
+    public JmsListenerContainerFactory topicJmsListenerContainerFactory(ConnectionFactory connectionFactory) {
+        DefaultJmsListenerContainerFactory returnValue = new DefaultJmsListenerContainerFactory();
+        returnValue.setConnectionFactory(connectionFactory);
+        returnValue.setSubscriptionDurable(Boolean.TRUE);
         return returnValue;
     }
 }

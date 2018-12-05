@@ -1,4 +1,4 @@
-package net.hmcts.springjmsdemo;
+package net.hmcts.springjmsdemo.config;
 
 import java.io.UnsupportedEncodingException;
 
