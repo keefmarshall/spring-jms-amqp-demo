@@ -40,10 +40,6 @@ This is currently untested against Azure, assumed to work as it reuses
 code from the blog post. The Azure `namespace` is not set in code,
 presumably it is part of the host connection URL supplied?
 
-The `qpid-jms-client` library version is dependency-managed to `0.33.0` - if you use
-the latest version, there are a number of classes not found in the `javax.jms`
-package. This needs further investigation.
-
 References
 ----------
 
