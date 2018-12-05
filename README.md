@@ -18,7 +18,7 @@ You need to do some things after installation:
 
 1. Create a keystore for use with SSL (can create a self-signed keystore
 from within the Broker-J admin tool)
-2. Create an AMQP port on 5671, which uses the TLS transport
+2. Create an AMQP port on 5671, which uses the SSL transport (for TLS)
 2. Add a durable queue called `myqueue` for testing queues
 3. Add a durable exchange of type 'topic' called `test.topic` for testing
 topics and subscriptions.
@@ -39,6 +39,13 @@ Code Notes
 This is currently untested against Azure, assumed to work as it reuses
 code from the blog post. The Azure `namespace` is not set in code,
 presumably it is part of the host connection URL supplied?
+
+In order to use a self-signed certificate on the local Broker-J instance,
+I have included a very crude "trust all" SSL Context. This is only enabled
+if the config property `amqp.trustAllCerts` is set and should *never* be used
+in production, or when talking to Azure Service Bus in general - only for
+development purposes against Broker-J.
+
 
 References
 ----------
