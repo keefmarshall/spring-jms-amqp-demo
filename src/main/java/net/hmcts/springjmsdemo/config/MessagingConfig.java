@@ -67,7 +67,8 @@ public class MessagingConfig {
         JmsConnectionFactory jmsConnectionFactory = new JmsConnectionFactory(details.getUrlString());
         jmsConnectionFactory.setUsername(details.getUsername());
         jmsConnectionFactory.setPassword(details.getPassword());
-        jmsConnectionFactory.setClientID(clientId);
+        // Client ID must be unique
+        jmsConnectionFactory.setClientID(clientId + Math.floor(Math.random() * 10000));
         jmsConnectionFactory.setReceiveLocalOnly(true);
 
         if (details.isTrustAllCerts()) {
