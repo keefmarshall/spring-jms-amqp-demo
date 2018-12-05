@@ -1,6 +1,5 @@
 package net.hmcts.springjmsdemo.topic;
 
-import net.hmcts.springjmsdemo.queue.QueuePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import javax.jms.Session;
  */
 @Service
 public class TopicPublisher {
-    private final Logger logger = LoggerFactory.getLogger(QueuePublisher.class);
+    private final Logger logger = LoggerFactory.getLogger(TopicPublisher.class);
 
     @Value("${amqp.topic}")
     private String destination;
