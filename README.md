@@ -36,9 +36,9 @@ will work fine.
 Code Notes
 ----------
 
-This is currently untested against Azure, assumed to work as it reuses
-code from the blog post. The Azure `namespace` is not set in code,
-presumably it is part of the host connection URL supplied?
+Tested as-is against both Apache Qpid Broker-J (configured as above) and
+Azure Service Bus configured with a queue and topic/subscription. For
+ASB, you use the Access Policy name as the username (e.g. *RootManageSharedAccessKey* - excpet don't use that one, create one with fewer permissions) - and use the *primary key* as the password.
 
 JMS and AMQP 1.0 have slightly different ideas of how Topics and Subscriptions
 should work - AMQP 1.0 treats a subscription like a queue, but JMS treats it 
