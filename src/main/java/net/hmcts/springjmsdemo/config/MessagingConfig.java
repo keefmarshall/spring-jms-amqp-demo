@@ -67,8 +67,11 @@ public class MessagingConfig {
         JmsConnectionFactory jmsConnectionFactory = new JmsConnectionFactory(details.getUrlString());
         jmsConnectionFactory.setUsername(details.getUsername());
         jmsConnectionFactory.setPassword(details.getPassword());
-        // Client ID must be unique
-        jmsConnectionFactory.setClientID(clientId + Math.floor(Math.random() * 10000));
+        // Client ID must be unique but also consistently the same after a restart
+        // TODO: put some thought into this, if there are multiple instances deployed they will
+        // not be able to connect to the same subscription
+//        jmsConnectionFactory.setClientID(clientId + Math.floor(Math.random() * 10000));
+        jmsConnectionFactory.setClientID(clientId);
         jmsConnectionFactory.setReceiveLocalOnly(true);
 
         if (details.isTrustAllCerts()) {

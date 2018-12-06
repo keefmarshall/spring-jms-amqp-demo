@@ -40,6 +40,18 @@ This is currently untested against Azure, assumed to work as it reuses
 code from the blog post. The Azure `namespace` is not set in code,
 presumably it is part of the host connection URL supplied?
 
+JMS and AMQP 1.0 have slightly different ideas of how Topics and Subscriptions
+should work - AMQP 1.0 treats a subscription like a queue, but JMS treats it 
+as something a little different, that only one client can connect to. This 
+may lead to an issue if we need multiple instances of the service
+connecting to the same subscription (i.e. load balanced) as the Qpid
+library (at least, when connecting to Broker-J), creates a subscription
+queue name using the client ID, which therefore has
+to be unique for every connection. When connecting to Azure this will
+hopefully not be so much of an issue as the TopicSubscription name will 
+be preset/hardwired in the infrastructure config rather than created on the fly, and
+Azure subscriptions allow multiple client connections.
+
 In order to use a self-signed certificate on the local Broker-J instance,
 I have included a very crude "trust all" SSL Context. This is only enabled
 if the config property `amqp.trustAllCerts` is set and should *never* be used
