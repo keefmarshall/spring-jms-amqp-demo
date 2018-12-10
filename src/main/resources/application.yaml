@@ -13,3 +13,5 @@ amqp:
   subscription: test.queue
   # DO NOT SET THIS 'true' IN PRODUCTION!
   trustAllCerts: true
+  # You only need this to be non-zero for build pipeline
+  startDelaySeconds: 10

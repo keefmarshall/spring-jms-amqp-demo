@@ -97,6 +97,7 @@ public class MessagingConfig {
     public JmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
         DefaultJmsListenerContainerFactory returnValue = new DefaultJmsListenerContainerFactory();
         returnValue.setConnectionFactory(connectionFactory);
+        returnValue.setErrorHandler(new JMSErrorHandler());
         return returnValue;
     }
 
@@ -112,6 +113,8 @@ public class MessagingConfig {
         DefaultJmsListenerContainerFactory returnValue = new DefaultJmsListenerContainerFactory();
         returnValue.setConnectionFactory(connectionFactory);
         returnValue.setSubscriptionDurable(Boolean.TRUE);
+        returnValue.setErrorHandler(new JMSErrorHandler());
         return returnValue;
     }
+
 }
