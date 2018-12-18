@@ -38,6 +38,6 @@ public class DelayedQueueStarter {
 
     private void startQueues() {
         topicConsumer.init();
-        topicPublisher.init();
+//        topicPublisher.init();
     }
 }

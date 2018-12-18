@@ -1,6 +1,8 @@
 package net.hmcts.springjmsdemo.config;
 
 import org.apache.qpid.jms.JmsConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +10,7 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.retry.annotation.EnableRetry;
 
 import javax.jms.ConnectionFactory;
 import javax.net.ssl.SSLContext;
@@ -22,7 +25,10 @@ import java.security.cert.X509Certificate;
  * http://ramblingstechnical.blogspot.com/p/using-azure-service-bus-with-spring-jms.html
  */
 @Configuration
+@EnableRetry
 public class MessagingConfig {
+    private final Logger logger = LoggerFactory.getLogger(MessagingConfig.class);
+
     @Value("${spring.application.name}")
     private String clientId;
 
@@ -64,6 +70,8 @@ public class MessagingConfig {
             MessageStoreDetails details,
             SSLContext jmsSslContext)
             throws UnsupportedEncodingException {
+
+        logger.info("Creating JMSConnectionFactory bean..");
         JmsConnectionFactory jmsConnectionFactory = new JmsConnectionFactory(details.getUrlString());
         jmsConnectionFactory.setUsername(details.getUsername());
         jmsConnectionFactory.setPassword(details.getPassword());
@@ -83,6 +91,7 @@ public class MessagingConfig {
 
     @Bean
     public JmsTemplate jmsTemplate(ConnectionFactory jmsConnectionFactory) {
+        logger.info("Creating JMSTemplate bean..");
         JmsTemplate returnValue = new JmsTemplate();
         returnValue.setConnectionFactory(jmsConnectionFactory);
         return returnValue;
@@ -95,6 +104,7 @@ public class MessagingConfig {
      */
     @Bean
     public JmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
+        logger.info("Creating JMSListenerContainer bean for queues..");
         DefaultJmsListenerContainerFactory returnValue = new DefaultJmsListenerContainerFactory();
         returnValue.setConnectionFactory(connectionFactory);
         returnValue.setErrorHandler(new JMSErrorHandler());
@@ -110,11 +120,11 @@ public class MessagingConfig {
      */
     @Bean
     public JmsListenerContainerFactory topicJmsListenerContainerFactory(ConnectionFactory connectionFactory) {
+        logger.info("Creating JMSListenerContainer bean for topics..");
         DefaultJmsListenerContainerFactory returnValue = new DefaultJmsListenerContainerFactory();
         returnValue.setConnectionFactory(connectionFactory);
         returnValue.setSubscriptionDurable(Boolean.TRUE);
         returnValue.setErrorHandler(new JMSErrorHandler());
         return returnValue;
     }
-
 }

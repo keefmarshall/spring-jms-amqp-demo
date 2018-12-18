@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -33,6 +35,10 @@ public class QueuePublisher {
         sendPing();
     }
 
+    @Retryable(
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 2000, multiplier = 3)
+    )
     public void sendPing() {
         logger.info("Sending ping to queue");
         jmsTemplate.send(destination, (Session session) -> session.createTextMessage("ping"));

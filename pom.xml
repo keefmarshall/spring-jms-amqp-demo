@@ -54,6 +54,11 @@
             <artifactId>spring-retry</artifactId>
             <version>1.1.5.RELEASE</version>
         </dependency>
+        <!-- spring-aspects needed for @Retryable annotation support -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
