@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.jms.IllegalStateException;
 import org.springframework.jms.UncategorizedJmsException;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -13,6 +15,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
@@ -26,6 +29,8 @@ public class TopicPublisher {
 
     @Value("${amqp.topic}")
     private String destination;
+
+    @Autowired private ConnectionFactory connectionFactory;
 
     private final JmsTemplate jmsTemplate;
 
@@ -54,15 +59,26 @@ public class TopicPublisher {
 //        }
 //    }
 
-    // TODO: Spring Retry
     @Retryable(
             maxAttempts = 5,
-            backoff = @Backoff(delay = 2000, multiplier = 3)
+            backoff = @Backoff(delay = 500, multiplier = 3)
     )
     public void sendPing(int counter) {
         logger.info("Sending pong " + counter + " to topic...");
-        jmsTemplate.send(destination, (Session session) -> session.createTextMessage("pong " + counter));
-        logger.info("...sent.");
+        try {
+            jmsTemplate.send(destination, session -> session.createTextMessage("pong " + counter));
+            logger.info("...sent.");
+        } catch (IllegalStateException e) {
+            if (connectionFactory instanceof CachingConnectionFactory) {
+                logger.info("Send failed, attempting to reset connection...");
+                ((CachingConnectionFactory) connectionFactory).resetConnection();
+                logger.info("Resending..");
+                jmsTemplate.send(destination, session -> session.createTextMessage("pong " + counter));
+                logger.info("...sent.");
+            } else {
+                throw e;
+            }
+        }
     }
 
     @Recover

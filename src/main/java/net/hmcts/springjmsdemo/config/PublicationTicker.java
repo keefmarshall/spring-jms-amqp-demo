@@ -30,7 +30,7 @@ public class PublicationTicker {
                     } catch (Exception e) { // Critically important to catch exceptions here
                         logger.error("Publisher threw exception trying to send: ", e);
                     }
-                    Thread.sleep(5000);
+                    Thread.sleep(1000 * 60 * 11); // 11 minutes
                 }
             } catch (InterruptedException iex) {
                 logger.warn("Thread interrupted", iex);
