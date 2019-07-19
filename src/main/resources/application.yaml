@@ -11,7 +11,10 @@ amqp:
   # Topic and subscription:
   topic: test.topic
   subscription: test.queue
+  # Used by Managed JMS stack:
+  managedtopic: test.topic.managed
+  unmanagedtopic: test.topic.unmanaged
   # DO NOT SET THIS 'true' IN PRODUCTION!
   trustAllCerts: true
   # You only need this to be non-zero for build pipeline
-  startDelaySeconds: 30
+  startDelaySeconds: 3
